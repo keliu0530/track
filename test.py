@@ -5,10 +5,10 @@ from math import sqrt
 import numpy as np
 
 global x, y, W, T
-x = range(244000, 264000, 500)
-y = range(230000, 250000, 500)
-#x = range(112000, 288000, 2000)
-#y = range(210000, 275000, 2000)
+# x = range(224000, 284000, 100)
+# y = range(210000, 270000, 100)
+x = range(112000, 288000, 500)
+y = range(210000, 275000, 500)
 W = 2
 T = 1
 
@@ -25,12 +25,6 @@ l = ['7am.csv', '8am.csv', '9am.csv']
 kde = []
 for i in l:
     kde.append(evaluate(i, x, y))
-    
-    
-fig, ax = plt.subplots()
-ax.imshow(np.rot90(kde[2]-kde[0]), cmap=plt.cm.gist_earth_r)
-plt.show()
-
 
 def FMap(kde, x, y):
     xyt = np.zeros(3)
@@ -58,7 +52,7 @@ if(len(x) - W > W and len(y) - W > W):
             result = FMap(kde, j, i)
             x_tr.append(result[0])
             y_tr.append(result[1])
-            h.append((result[0], result[1]))
+            h.append([result[0], result[1]])
         u.append(x_tr)
         v.append(y_tr)
         mv.append(h)
@@ -70,6 +64,32 @@ if(len(x) - W > W and len(y) - W > W):
 plt.figure()
 Q = plt.quiver(X, Y, U, V, units='width')
 #qk = plt.quiverkey(Q, 0.9, 0.9, 2, r'$2 \frac{m}{s}$', labelpos='E',coordinates='figure')
-
 plt.show()
-            
+
+import numpy as np
+import pylab as plt
+
+import lic_internal
+
+dpi = 100
+sizex = len(mv)
+sizey = len(mv[0])
+video = False
+texture = np.random.rand(sizey,sizex).astype(np.float32)
+
+plt.bone()
+frame=0
+vectors = np.asarray(mv, dtype=np.float32)
+kernellen = 31
+kernel = np.sin(np.arange(kernellen)*np.pi/kernellen)
+kernel = kernel.astype(np.float32)
+
+image = lic_internal.line_integral_convolution(vectors, texture, kernel)
+
+plt.clf()
+plt.axis('off')
+plt.figimage(image)
+plt.gcf().set_size_inches((sizey/float(dpi),sizex/float(dpi)))
+# plt.gcf().set_size_inches((7,7))
+plt.savefig("flow-image.png",dpi=dpi)
+
