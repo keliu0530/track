@@ -5,10 +5,10 @@ from math import sqrt
 import numpy as np
 
 global x, y, W, T
-# x = range(224000, 284000, 100)
-# y = range(210000, 270000, 100)
-x = range(112000, 288000, 500)
-y = range(210000, 275000, 500)
+x = range(224000, 284000, 200)
+y = range(210000, 270000, 200)
+# x = range(112000, 288000, 500)
+# y = range(210000, 275000, 500)
 W = 2
 T = 1
 
